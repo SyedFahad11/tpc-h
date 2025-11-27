@@ -8,7 +8,8 @@ sources:
           - name: link
             tests:
               - not_null:
-                  severity: warn  
+                  config:
+                    severity: warn
           - name: id
             tests:
               - not_null
