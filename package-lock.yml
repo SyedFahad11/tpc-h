@@ -1,0 +1,26 @@
+packages:
+  - name: codegen
+    package: dbt-labs/codegen
+    version: 0.14.0
+  - name: dbt_utils
+    package: dbt-labs/dbt_utils
+    version: 1.3.2
+  - name: dbt_external_tables
+    package: dbt-labs/dbt_external_tables
+    version: 0.11.1
+  - name: metrics
+    package: dbt-labs/metrics
+    version: 1.3.2
+  - name: dbt_artifacts
+    package: brooklyn-data/dbt_artifacts
+    version: 2.9.3
+  - name: dbt_date
+    package: godatadriven/dbt_date
+    version: 0.10.0
+  - git: https://github.com/dpguthrie/instagram_module
+    name: module_3
+    revision: ece821a668d3424e5540e496ba54c1e2feccc55a
+  - git: https://github.com/dpguthrie/facebook_module
+    name: module_2
+    revision: 74f9e92ee9ad334d8df704d223fe624707d87eed
+sha1_hash: 7140455139234fd0e850f362f2f68b8da81c1da8
