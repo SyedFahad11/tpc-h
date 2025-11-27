@@ -13,7 +13,6 @@ described as (
     {% set columns = adapter.get_columns_in_relation(ref_orders) %}
     {% set numeric_cols = [] %}
     {% for col in columns %}
-        {{ log("col: " ~ col.name ~ " :: " ~ col.data_type, info=True) }}
         {% if col.dtype in ('NUMBER', 'FLOAT') %}
             {% do numeric_cols.append(col) %}
         {% endif %}
