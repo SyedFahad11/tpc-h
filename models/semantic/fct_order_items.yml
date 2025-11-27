@@ -1,0 +1,47 @@
+version: 2
+
+semantic_models:
+  - name: fct_order_items_semantic
+    model: ref('fct_order_items')
+    
+
+    entities:
+      - name: order_item
+        type: primary
+      - name: customer
+        type: foreign
+        expr: customer_key
+      - name: supplier
+        type: foreign
+        expr: supplier_key
+
+    dimensions:
+      - name: order_date
+        type: time
+        type_params:
+          time_granularity: day
+
+      - name: return_flag
+        type: categorical
+
+      - name: order_item_status_code
+        type: categorical
+    
+      - name: ship_mode
+        type: categorical
+
+    measures:
+    - name: gross_item_sales_amount
+      expr: gross_item_sales_amount
+      agg: sum
+      agg_time_dimension: order_date
+
+    - name: customer_key
+      expr: customer_key
+      agg: count_distinct
+      agg_time_dimension: order_date
+
+    - name: supplier_cost
+      expr: supplier_cost
+      agg: sum
+      agg_time_dimension: order_date

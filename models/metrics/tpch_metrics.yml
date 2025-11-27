@@ -1,51 +1,47 @@
 version: 2
 
 metrics:
-  - &finance-metric
-    name: total_revenue
-    label: Total Revenue
-    model: ref('fct_order_items')
-    description: Total income from all orders
 
-    calculation_method: sum
-    expression: gross_item_sales_amount
+  - name: total_revenue
+    label: "Total Revenue"
+    description: "Total income from all orders"
+    type: simple
+    type_params:
+      measure:
+        name: gross_item_sales_amount
 
-    timestamp: order_date
-    time_grains: [day, week, month, quarter, year]
+  - name: total_customers
+    label: "Total Customers"
+    description: "Total customers with an order"
+    type: simple
+    type_params:
+      measure:
+        name: customer_key
 
-    dimensions:
-      - return_flag
-      - order_item_status_code
-      - supplier_key
-      - ship_mode
+  - name: total_expenses
+    label: "Total Expenses"
+    description: "Total expenses from all orders"
+    type: simple
+    type_params:
+      measure:
+        name: supplier_cost
 
-  - <<: *finance-metric
-    name: total_customers
-    label: Total Customers
-    model: ref('fct_order_items')
-    description: Total customers with an order
-    calculation_method: count_distinct
-    expression: customer_key
+  - name: total_profit
+    label: "Total Profit"
+    description: "Profit = Revenue – Expenses"
+    type: derived
+    type_params:
+      metrics: 
+        - total_revenue
+        - total_expenses
+      expr: total_revenue  - total_expenses 
 
-  - <<: *finance-metric
-    name: total_expenses
-    label: Total Expenses
-    model: ref('fct_order_items')
-    description: Total expenses from all orders
-    expression: supplier_cost
-
-  - <<: *finance-metric
-    name: total_profit
-    label: Total Profit
-    description: Total profit from all orders
-    calculation_method: derived
-    model: # Derived metrics cannot have a 'model' property
-    expression: "{{ metric('total_revenue') }} - {{ metric('total_expenses') }}"
-
-  - <<: *finance-metric
-    name: average_revenue_per_customer
-    label: Average Revenue Per Customer
-    description: The average revenue received per customer
-    calculation_method: derived
-    model: # Derived metrics cannot have a 'model' property
-    expression: "{{ metric('total_revenue') }} / {{ metric('total_customers') }}"
+  - name: average_revenue_per_customer
+    label: "Average Revenue Per Customer"
+    description: "Revenue divided by number of customers"
+    type: derived
+    type_params:
+      metrics:
+        - total_revenue
+        - total_customers
+      expr:  total_revenue/  total_customers 
