@@ -1,13 +1,11 @@
 {% snapshot tpch_supplier_snapshot %}
+  {{ config(
+      target_database='tpc_h',
+      target_schema='snapshots',
+      unique_key='s_suppkey',
+      strategy='check',
+      check_cols=['s_name','s_address','s_nationkey','s_phone','s_acctbal','s_comment']  
+  ) }}
 
-{{ config(
-    target_database='doug_demo_v2',
-    target_schema='snapshots',
-    unique_key='s_suppkey',
-    strategy='timestamp',
-    updated_at='_etl_updated_timestamp',
-)}}
-
-select * from {{ source('tpch', 'supplier') }}
-
+  select * from {{ source('tpch', 'supplier') }}
 {% endsnapshot %}
