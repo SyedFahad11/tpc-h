@@ -9,19 +9,16 @@ models:
         tests:
           - unique
           - not_null
-        config:
-          meta:
-            metrics:
-              total_unique_customers:
-                type: count
+        meta:
+          metrics:
+            total_unique_customers:
+              type: count
       - name: region
         description: region name
         tests:
           - accepted_values:
-              config:
-                severity: warn
-              arguments:
-                values: ['AFRICA', 'MIDDLE EAST', 'ASIA', 'EUROPE', 'AMERICA']
+              values: ['AFRICA','MIDDLE EAST','ASIA','EUROPE','AMERICA']
+              severity: warn
       - name: name
         description: customer id
       - name: address
@@ -34,13 +31,12 @@ models:
         description: '{{ doc("account_balance") }}'
       - name: market_segment
         description: market segment of the customer
-    config:
-      meta:
-        joins:
-          - join: stg_tpch_customers
-            sql_on: ${dim_customers.customer_key} = ${stg_tpch_customers.customer_key}
-          - join: stg_tpch_nations
-            sql_on: ${stg_tpch_customers.nation_key} = ${stg_tpch_nations.nation_key}
+    meta:
+      joins:
+        - join: stg_tpch_customers
+          sql_on: ${dim_customers.customer_key} = ${stg_tpch_customers.customer_key}
+        - join: stg_tpch_nations
+          sql_on: ${stg_tpch_customers.nation_key} = ${stg_tpch_nations.nation_key}
 
   - name: dim_parts
     description: Parts dimensions table
@@ -85,12 +81,11 @@ models:
         description: '{{ doc("phone_number") }}'
       - name: account_balance
         description: '{{ doc("account_balance") }}'
-    config:
-      meta:
-        joins:
-          - join: stg_tpch_suppliers
-            sql_on: ${dim_suppliers.supplier_key} = ${stg_tpch_suppliers.supplier_key}
-
+    meta:
+      joins:
+        - join: stg_tpch_suppliers
+          sql_on: ${dim_suppliers.supplier_key} = ${stg_tpch_suppliers.supplier_key}
+ 
   - name: fct_order_items
     description: order items fact table
     columns:
@@ -101,11 +96,10 @@ models:
           - not_null
       - name: order_key
         description: foreign key for orders
-        config:
-          meta:
-            metrics:
-              items_in_order:
-                type: count_distinct
+        meta:
+          metrics:
+            items_in_order:
+              type: count_distinct
       - name: order_date
         description: date of the order
       - name: customer_key
@@ -144,16 +138,15 @@ models:
         description: total units
       - name: gross_item_sales_amount
         description: '{{ doc("gross_item_sales_amount") }}'
-        config:
-          meta:
-            metrics:
-              total_revenue:
-                type: sum
-                show_underlying_values:
-                  - return_flag
-                  - order_item_status_code
-                  - supplier_key
-                  - ship_mode
+        meta:
+          metrics:
+            total_revenue:
+              type: sum
+              show_underlying_values:
+                - return_flag
+                - order_item_status_code
+                - supplier_key
+                - ship_mode
       - name: discounted_item_sales_amount
         description: '{{ doc("discounted_item_sales_amount") }}'
       - name: item_discount_amount
@@ -162,14 +155,13 @@ models:
         description: '{{ doc("item_tax_amount") }}'
       - name: net_item_sales_amount
         description: '{{ doc("net_item_sales_amount") }}'
-    config:
-      meta:
-        joins:
-          - join: dim_customers
-            sql_on: ${fct_order_items.customer_key} = ${dim_customers.customer_key}
-          - join: stg_tpch_suppliers
-            sql_on: ${fct_order_items.supplier_key} = ${stg_tpch_suppliers.supplier_key}
-
+    meta:
+      joins:
+        - join: dim_customers
+          sql_on: ${fct_order_items.customer_key} = ${dim_customers.customer_key}
+        - join: stg_tpch_suppliers
+          sql_on: ${fct_order_items.supplier_key} = ${stg_tpch_suppliers.supplier_key}
+  
   - name: fct_orders
     description: orders fact table
     columns:
@@ -178,25 +170,21 @@ models:
         tests:
           - unique
           - not_null
-        config:
-          meta:
-            metrics:
-              total_orders:
-                type: sum
+        meta:
+          metrics:
+            total_orders:
+              type: sum
       - name: customer_key
         description: foreign key for customers
         tests:
           - relationships:
-              config:
-                severity: error
-              arguments:
-                to: ref('dim_customers')
-                field: customer_key
-        config:
-          meta:
-            metrics:
-              total_unique_customers:
-                type: count_distinct
+              to: ref('dim_customers')
+              field: customer_key
+              severity: error
+        meta:
+          metrics:
+            total_unique_customers:
+              type: count_distinct
       - name: order_date
         description: date of the order
       - name: status_code
@@ -217,8 +205,7 @@ models:
         description: '{{ doc("item_tax_amount") }}'
       - name: net_item_sales_amount
         description: '{{ doc("net_item_sales_amount") }}'
-    config:
-      meta:
-        joins:
-          - join: dim_customers
-            sql_on: ${fct_orders.customer_key} = ${dim_customers.customer_key}
+    meta:
+      joins:
+        - join: dim_customers
+          sql_on: ${fct_orders.customer_key} = ${dim_customers.customer_key}
